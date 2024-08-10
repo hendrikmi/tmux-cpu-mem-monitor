@@ -2,6 +2,32 @@
 
 This project is a simple yet flexible tool designed to display CPU and memory usage in the Tmux status bar.
 
+## Screenshots
+
+All options:
+
+<img src="img/full.png" alt="" style="width:30%; height:30%;"/>
+
+Without separator:
+
+<img src="img/full_no_separator.png" alt="" style="width:30%; height:30%;"/>
+
+Without icons:
+
+<img src="img/full_no_icons.png" alt="" style="width:30%; height:30%;"/>
+
+CPU and memory reversed:
+
+<img src="img/full_reversed.png" alt="" style="width:30%; height:30%;"/>
+
+Just CPU with icon:
+
+<img src="img/just_cpu_with_icon.png" alt="" style="width:30%; height:30%;"/>
+
+Just memory with prefix:
+
+<img src="img/just_mem_with_prefix.png" alt="" style="width:30%; height:30%;"/>
+
 ## Features
 
 - Display CPU usage as a percentage.

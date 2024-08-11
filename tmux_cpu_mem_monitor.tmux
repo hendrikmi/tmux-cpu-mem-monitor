@@ -55,5 +55,7 @@ main() {
     setup_virtual_env
     update_placeholder "cpu" "status-right" "cpu.py"
     update_placeholder "mem" "status-right" "mem.py"
+    update_placeholder "cpu" "status-left" "cpu.py"
+    update_placeholder "mem" "status-left" "mem.py"
 }
 main

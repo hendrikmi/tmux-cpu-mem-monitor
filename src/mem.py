@@ -27,8 +27,6 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    # fmt: off
-    parser.add_argument("-t","--total", action="store_true", default=False)
-    # fmt: on
+    parser.add_argument("-t", "--total", action="store_true", default=False)
     args = parser.parse_args()
     main(args)

@@ -30,25 +30,21 @@ setup_virtual_env() {
     fi
 }
 
-# Updates tmux option with the cpu/mem script command
-update_option() {
-    local option="$1"
+# Updates tmux option with the cpu or mem script command
+update_placeholder() {
+    local placeholder="$1"
+    local option="$2"
+    local script="$3"
     local option_value="$(tmux show-option -gqv "$option")"
 
-    # Extract everything between #{cpu_mem and } from the option value
-    local cpu_mem_flags="${option_value#*\#\{cpu_mem }"
-    cpu_mem_flags="${cpu_mem_flags%\}*}"
-
-    # If no flags are provided, default to showing both CPU and mem usage
-    if [ -z "$cpu_mem_flags" ]; then
-        cpu_mem_flags="--cpu --mem"
-    fi
+    # Extract everything between #{placeholder and } from the option value
+    local flags=$(echo "$option_value" | awk -F "#{$placeholder" '{print $2}' | sed 's/\}.*//')
 
     # Construct the command to execute the Python script with the appropriate flags
-    local cpu_mem="#($CURRENT_DIR/venv/bin/python $CURRENT_DIR/src/main.py $cpu_mem_flags)"
+    local command="#($CURRENT_DIR/venv/bin/python $CURRENT_DIR/src/$script$flags)"
 
-    # Replace the #{cpu_mem ...} placeholder with the actual command in the option value
-    local new_option_value="${option_value//\#\{cpu_mem $cpu_mem_flags\}/$cpu_mem}"
+    # Replace the #{placeholder ...} placeholder with the actual command in the option value
+    local new_option_value="${option_value//\#\{$placeholder$flags\}/$command}"
 
     # Update the tmux option with the new value
     tmux set-option -g "$option" "$new_option_value"
@@ -57,8 +53,7 @@ update_option() {
 main() {
     check_python_installation
     setup_virtual_env
-    update_option "status-right"
-    update_option "status-left"
+    update_placeholder "cpu" "status-right" "cpu.py"
+    update_placeholder "mem" "status-right" "mem.py"
 }
 main
-

@@ -1,4 +1,4 @@
-# TMUX CPU & Memory Monitor
+# Tmux CPU & Memory Monitor
 
 A simple yet flexible tool designed to display CPU and memory usage in the Tmux status bar.
 
@@ -22,7 +22,7 @@ You can customize the display by passing additional options. For example, `#{mem
 
 ## Options
 
-`#{cpu}` Placehodler
+### `#{cpu}` Placeholder
 
 - `-i <num>, --interval <num>` (default `1`):
   - `0`: Compares system CPU times elapsed since last call (non-blocking).
@@ -31,7 +31,7 @@ You can customize the display by passing additional options. For example, `#{mem
 
 For more details, see the documentation of the underlying [psutil library](https://psutil.readthedocs.io/en/latest/#psutil.cpu_percent).
 
-`#{mem}` Placehodler
+### `#{mem}` Placeholder
 
 - `-t, --total`: Display memory usage as used/total in GB instead of a percentage.
 

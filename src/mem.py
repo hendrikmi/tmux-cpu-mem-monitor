@@ -1,5 +1,6 @@
-import psutil
 import argparse
+
+import psutil
 
 
 def get_mem_usage_percent():
@@ -12,8 +13,9 @@ def get_mem_usage_percent():
 def get_mem_usage_total():
     """Display memory usage as used/total in GB"""
     mem = psutil.virtual_memory()
-    used_gb = mem.used / (1024**3)  # Convert to GB
+    available_gb = mem.available / (1024**3)  # Convert to GB
     total_gb = mem.total / (1024**3)
+    used_gb = total_gb - available_gb
     return f"{used_gb:.2f}GB/{total_gb:.2f}GB"
 
 

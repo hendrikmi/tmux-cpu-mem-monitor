@@ -1,5 +1,5 @@
 import re
-from . import disk
+from src import disk
     
 def test_disk_percentage_format():
     """ Assert that the disk percentage is properly formatted

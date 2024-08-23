@@ -20,21 +20,21 @@ def _get_default_path():
         return "/"
 
 
-def get_disk_usage_percent(path: str):
+def get_disk_usage_percent(path=_get_default_path()):
     """Display disk usage as a percentage"""
     disk = psutil.disk_usage(path)
     disk_usage = disk.percent
     return f"{disk_usage}%"
 
 
-def get_disk_usage_free(path: str):
+def get_disk_usage_free(path=_get_default_path()):
     """Display free disk in GB"""
 
     disk = psutil.disk_usage(path)
     return f"{bytes2human(disk.free)}"
 
 
-def get_disk_usage_total(path: str):
+def get_disk_usage_total(path=_get_default_path()):
     """Display disk usage as used/total in GB"""
     disk = psutil.disk_usage(path)
     return f"{bytes2human(disk.used)}/{bytes2human(disk.total)}"

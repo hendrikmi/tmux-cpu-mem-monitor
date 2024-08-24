@@ -20,22 +20,30 @@ def _get_default_path():
         return "/"
 
 
-def get_disk_usage_percent(path=_get_default_path()):
+def get_disk_usage_percent(path=None):
     """Display disk usage as a percentage"""
+    if path is None:
+        path = _get_default_path()
+
     disk = psutil.disk_usage(path)
     disk_usage = disk.percent
     return f"{disk_usage}%"
 
 
-def get_disk_usage_free(path=_get_default_path()):
+def get_disk_usage_free(path=None):
     """Display free disk in GB"""
+    if path is None:
+        path = _get_default_path()
 
     disk = psutil.disk_usage(path)
     return f"{bytes2human(disk.free)}"
 
 
-def get_disk_usage_total(path=_get_default_path()):
+def get_disk_usage_total(path=None):
     """Display disk usage as used/total in GB"""
+    if path is None:
+        path = _get_default_path()
+
     disk = psutil.disk_usage(path)
     return f"{bytes2human(disk.used)}/{bytes2human(disk.total)}"
 
@@ -53,8 +61,9 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-t", "--total", action="store_true", default=False)
-    parser.add_argument("-f", "--free", action="store_true", default=False)
-    parser.add_argument("-p", "--path", type=str, default=_get_default_path())
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-t", "--total", action="store_true", default=False)
+    group.add_argument("-f", "--free", action="store_true", default=False)
+    group.add_argument("-p", "--path", type=str, default=None)
     args = parser.parse_args()
     main(args)

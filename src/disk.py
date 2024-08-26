@@ -47,7 +47,6 @@ def get_disk_usage_total(path=None):
     disk = psutil.disk_usage(path)
     return f"{bytes2human(disk.used)}/{bytes2human(disk.total)}"
 
-
 def main(args):
     if args.total:
         disk_usage = get_disk_usage_total(args.path)

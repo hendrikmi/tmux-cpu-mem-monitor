@@ -37,6 +37,7 @@ jobs:
       - name: Run tests
         run: |
           pytest -v
+
   format:
     runs-on: ubuntu-latest
     steps:

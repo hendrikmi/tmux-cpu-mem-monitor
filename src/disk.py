@@ -64,6 +64,6 @@ if __name__ == "__main__":
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-t", "--total", action="store_true", default=False)
     group.add_argument("-f", "--free", action="store_true", default=False)
-    group.add_argument("-p", "--path", type=str, default=None)
+    parser.add_argument("-p", "--path", type=str, default=None)
     args = parser.parse_args()
     main(args)

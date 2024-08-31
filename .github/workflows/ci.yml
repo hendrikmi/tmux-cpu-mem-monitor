@@ -42,7 +42,6 @@ jobs:
   format:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
       checks: write
     outputs:
       file: ${{ steps.ruff.outputs.file }}
@@ -75,9 +74,23 @@ jobs:
       - name: Run Ruff
         id: ruff
         run: |
-          ruff format
+          ruff format --check
 
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Write output to GitHub Pull Request
+        uses: actions/github-script@v4
         with:
-          commit_message: "Format code with Ruff"
-          skip_fetch: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'Ruff',
+              head_sha: context.sha,
+              status: 'completed',
+              conclusion: 'success',
+              output: {
+                title: 'Ruff',
+                summary: '${{ steps.ruff.outputs.message }}',
+                text: '${{ steps.ruff.outputs.file }}'
+              }
+            })

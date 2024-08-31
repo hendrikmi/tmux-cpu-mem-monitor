@@ -40,8 +40,6 @@ jobs:
 
   format:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -60,6 +58,3 @@ jobs:
         run: |
           # It would be nice to push the changes back to the PR branch, but that's difficult to do with forks
           ruff format --check
-        
-      - name: Python Vulture Action
-        uses: anaynayak/python-vulture-action@v1.0

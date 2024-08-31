@@ -12,7 +12,6 @@ on:
       - synchronize
       - reopened
       - ready_for_review
-  pull_request_target:
 
 jobs:
   test:

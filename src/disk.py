@@ -19,6 +19,7 @@ def _get_default_path():
     else:
         return "/"
 
+
 def get_disk_usage_percent(path=None):
     """Display disk usage as a percentage"""
     if path is None:
@@ -28,6 +29,7 @@ def get_disk_usage_percent(path=None):
     disk_usage = disk.percent
     return f"{disk_usage}%"
 
+
 def get_disk_usage_free(path=None):
     """Display free disk in GB"""
     if path is None:
@@ -36,6 +38,7 @@ def get_disk_usage_free(path=None):
     disk = psutil.disk_usage(path)
     return f"{bytes2human(disk.free)}"
 
+
 def get_disk_usage_total(path=None):
     """Display disk usage as used/total in GB"""
     if path is None:
@@ -43,6 +46,7 @@ def get_disk_usage_total(path=None):
 
     disk = psutil.disk_usage(path)
     return f"{bytes2human(disk.used)}/{bytes2human(disk.total)}"
+
 
 def main(args):
     if args.total:
@@ -54,15 +58,24 @@ def main(args):
 
     print(disk_usage)
 
+
 def _make_ssl_transport(
-    rawsock, protocol, sslcontext, waiter=None,
-    *, server_side=False, server_hostname=None,
-    extra=None, server=None,
+    rawsock,
+    protocol,
+    sslcontext,
+    waiter=None,
+    *,
+    server_side=False,
+    server_hostname=None,
+    extra=None,
+    server=None,
     ssl_handshake_timeout=None,
-    call_connection_made=True):
-    '''Make an SSL transport.'''
+    call_connection_made=True,
+):
+    """Make an SSL transport."""
     if extra is None:
-      extra = {}
+        extra = {}
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

@@ -43,11 +43,23 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      checks: write
     outputs:
       file: ${{ steps.ruff.outputs.file }}
       message: ${{ steps.ruff.outputs.message }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+          # Checkout the fork/head-repository and push changes to the fork.
+          # If you skip this, the base repository will be checked out and changes
+          # will be committed to the base repository!
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+
+          # Checkout the branch made in the fork. Will automatically push changes
+          # back to this branch.
+          ref: ${{ github.head_ref }}
 
       - name: Install Python
         uses: actions/setup-python@v5
@@ -68,3 +80,4 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Format code with Ruff"
+          skip_fetch: true

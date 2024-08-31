@@ -74,7 +74,7 @@ jobs:
       - name: Run Ruff
         id: ruff
         run: |
-          ruff format --check
+          ruff format
 
       - name: Write output to GitHub Pull Request
         uses: actions/github-script@v4

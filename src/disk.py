@@ -5,6 +5,10 @@ import sys
 from psutil._common import bytes2human
 
 
+def unused_function():
+    return "Hello"
+
+
 def _get_default_path():
     """Get the default path for the current platform"""
     if sys.platform == "win32":

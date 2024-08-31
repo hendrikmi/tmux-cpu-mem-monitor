@@ -15,29 +15,29 @@ on:
   pull_request_target:
 
 jobs:
-  # test:
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     matrix:
-  #       python-version: ['3.9', '3.10', '3.11']
-  #       os: [ubuntu-latest, windows-latest, macos-latest]
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11']
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
-  #   steps:
-  #     - uses: actions/checkout@v4
+    steps:
+      - uses: actions/checkout@v4
 
-  #     - name: Set up Python ${{ matrix.python-version }}
-  #       uses: actions/setup-python@v5
-  #       with:
-  #         python-version: ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
-  #     - name: Install dependencies
-  #       run: |
-  #         python -m pip install --upgrade pip
-  #         pip install -r requirements-dev.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
 
-  #     - name: Run tests
-  #       run: |
-  #         pytest -v
+      - name: Run tests
+        run: |
+          pytest -v
 
   format:
     runs-on: ubuntu-latest
@@ -62,11 +62,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install ruff
 
-      # Update output format to enable automatic inline annotations.
       - name: Run Ruff
         id: ruff
         run: |
           ruff format
-
-      - name: Add & Commit
-        uses: EndBug/add-and-commit@v9.1.4

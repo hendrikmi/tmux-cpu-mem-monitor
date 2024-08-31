@@ -59,6 +59,24 @@ def main(args):
     print(disk_usage)
 
 
+def _make_ssl_transport(
+    rawsock,
+    protocol,
+    sslcontext,
+    waiter=None,
+    *,
+    server_side=False,
+    server_hostname=None,
+    extra=None,
+    server=None,
+    ssl_handshake_timeout=None,
+    call_connection_made=True,
+):
+    """Make an SSL transport."""
+    if extra is None:
+        extra = {}
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group()

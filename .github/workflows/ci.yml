@@ -12,6 +12,7 @@ on:
       - synchronize
       - reopened
       - ready_for_review
+  pull_request_target:
 
 jobs:
   # test:
@@ -49,6 +50,15 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
+
+          # Checkout the fork/head-repository and push changes to the fork.
+          # If you skip this, the base repository will be checked out and changes
+          # will be committed to the base repository!
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+
+          # Checkout the branch made in the fork. Will automatically push changes
+          # back to this branch.
+          ref: ${{ github.head_ref }}
 
       - name: Install Python
         uses: actions/setup-python@v5

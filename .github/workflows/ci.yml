@@ -78,7 +78,6 @@ jobs:
 
       - name: Write output to GitHub Pull Request
         uses: actions/github-script@v4
-        if: ${{ steps.ruff.status == 'failure' }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |

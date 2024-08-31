@@ -42,7 +42,7 @@ jobs:
   format:
     runs-on: ubuntu-latest
     permissions:
-      checks: write
+      contents: write
     outputs:
       file: ${{ steps.ruff.outputs.file }}
       message: ${{ steps.ruff.outputs.message }}

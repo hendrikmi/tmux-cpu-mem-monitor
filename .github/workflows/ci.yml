@@ -49,16 +49,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
-
-          # Checkout the fork/head-repository and push changes to the fork.
-          # If you skip this, the base repository will be checked out and changes
-          # will be committed to the base repository!
           repository: ${{ github.event.pull_request.head.repo.full_name }}
-
-          # Checkout the branch made in the fork. Will automatically push changes
-          # back to this branch.
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Install Python
         uses: actions/setup-python@v5
@@ -76,21 +68,5 @@ jobs:
         run: |
           ruff format
 
-      - name: Write output to GitHub Pull Request
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.checks.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              name: 'Ruff',
-              head_sha: context.sha,
-              status: 'completed',
-              conclusion: 'success',
-              output: {
-                title: 'Ruff',
-                summary: '${{ steps.ruff.outputs.message }}',
-                text: '${{ steps.ruff.outputs.file }}'
-              }
-            })
+      - name: Add & Commit
+        uses: EndBug/add-and-commit@v9.1.4

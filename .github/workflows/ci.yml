@@ -38,6 +38,30 @@ jobs:
         run: |
           pytest -v
 
+  format:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff
+
+      - name: Run Ruff
+        id: ruff
+        run: |
+          # It would be nice to push the changes back to the PR branch, but that's difficult to do with forks
+          ruff check --select I --exit-non-zero-on-fix --output-format=github
+          ruff format
+
   coverage:
     runs-on: ubuntu-latest
 
@@ -45,3 +69,4 @@ jobs:
       - uses: actions/checkout@v4
       - name: Python Vulture Action
         uses: anaynayak/python-vulture-action@v1.0
+

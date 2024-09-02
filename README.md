@@ -36,7 +36,7 @@ For more details, see the documentation of the underlying [psutil library](https
 - `-t, --total`: Display memory usage as used/total in GB instead of a percentage.
 
 ### `#{disk}` Placeholder
-- `-p <path>, --path <path>`: Specify the path to monitor. Default is `/`.
+- `-p <path>, --path <path>`: Specify the path to monitor. Defaults: `C:` for Windows, `/System/Volumes/Data` for Mac, and `/` for Linux.
 - `-t, --total`: Display disk usage as used/total in GB instead of a percentage.
 - `-f, --free`: Display free disk space in GB.
 
@@ -47,21 +47,21 @@ set -g status-right "#{cpu} | #{mem} | #{disk}"
 ```
 
 <!-- TODO: Add image with disk usage -->
-<img src="img/cpu_mem.png" alt="" style="width:75%; height:75%;"/>
+<img src="img/cpu_mem_disk.png" alt="" style="width:100%; height:100%;"/>
 
 ```bash
 set -g status-right " CPU: #{cpu} |  MEM: #{mem -t} | 󱛟 DISK: #{disk -t}"
 ```
 
 <!-- TODO: Add image with disk usage -->
-<img src="img/cpu_mem_t.png" alt="" style="width:75%; height:75%;"/>
+<img src="img/cpu_mem_t_disk_t.png" alt="" style="width:100%; height:100%;"/>
 
 ```bash
 set -g status-right " CPU: #{cpu -i 3} |  MEM: #{mem} | 󱛟 DISK: #{disk -f}"
 ```
 
 <!-- TODO: Add image with disk usage -->
-<img src="img/cpu_i_mem.png" alt="" style="width:75%; height:75%;"/>
+<img src="img/cpu_mem_disk_f.png" alt="" style="width:100%; height:100%;"/>
 
 ## Why Another Plugin?
 

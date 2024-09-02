@@ -60,3 +60,10 @@ jobs:
           ruff check --select I --fix
           ruff format
 
+  coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Python Vulture Action
+        uses: anaynayak/python-vulture-action@v1.0

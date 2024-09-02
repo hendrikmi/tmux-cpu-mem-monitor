@@ -59,8 +59,10 @@ jobs:
         id: ruff
         run: |
           # It would be nice to push the changes back to the PR branch, but that's difficult to do with forks
-          ruff check --select I --exit-non-zero-on-fix --output-format=github
-          ruff format
+          # Run lint check
+          ruff check --exit-non-zero-on-fix
+          # Run format check, non-zero exit code if there are any changes
+          ruff format --check
 
   coverage:
     runs-on: ubuntu-latest

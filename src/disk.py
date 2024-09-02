@@ -13,7 +13,6 @@ def _get_default_path():
     elif sys.platform == "darwin":
         return "/System/Volumes/Data"
     elif (
-
         # IF kind of linux AND WSL is installed
         sys.platform.startswith("linux") and os.path.exists("/usr/lib/wsl")
     ):

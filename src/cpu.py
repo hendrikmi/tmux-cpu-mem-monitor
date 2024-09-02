@@ -1,5 +1,6 @@
-import psutil
 import argparse
+
+import psutil
 
 
 def get_cpu_usage(interval: int, percpu: bool) -> str:

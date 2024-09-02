@@ -57,4 +57,6 @@ jobs:
         id: ruff
         run: |
           # It would be nice to push the changes back to the PR branch, but that's difficult to do with forks
-          ruff format --check
+          ruff check --select I --fix
+          ruff format
+

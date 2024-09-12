@@ -40,10 +40,14 @@ For more details, see the documentation of the underlying [psutil library](https
 - `-t, --total`: Display disk usage as used/total in GB instead of a percentage.
 - `-f, --free`: Display free disk space in GB.
 
+### `#{battery}` Placeholder
+- `-t, --time`: Display the remaining battery life time.
+- `-p, --percentage`: Display the remaining battery percentage.
+
 ## Examples
 
 ```bash
-set -g status-right "#{cpu} | #{mem} | #{disk}"
+set -g status-right "#{cpu} | #{mem} | #{disk} | #{battery}"
 ```
 
 <!-- TODO: Add image with disk usage -->

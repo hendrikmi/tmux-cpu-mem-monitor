@@ -15,7 +15,7 @@ def get_battery_percent():
 
     battery = psutil.sensors_battery()
     battery_percent = battery.percent
-    return f"{battery_percent}"
+    return f"{battery_percent}%"
 
 
 def get_battery_time():

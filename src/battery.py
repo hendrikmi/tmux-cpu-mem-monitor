@@ -1,4 +1,5 @@
 import argparse
+
 import psutil
 
 
@@ -13,9 +14,8 @@ def get_battery_percent():
     if _get_charging_status():
         return "Charging"
 
-    battery = psutil.sensors_battery()
-    battery_percent = battery.percent
-    return f"{battery_percent}%"
+    battery = round(psutil.sensors_battery().percent)
+    return f"{battery}%"
 
 
 def get_battery_time():
@@ -23,10 +23,11 @@ def get_battery_time():
     if _get_charging_status():
         return "Charging"
 
-    battery = psutil.sensors_battery()
-    battery_time = battery.secsleft
-    hours, remainder = divmod(battery_time, 3600)
+    battery = psutil.sensors_battery().secsleft
+    hours, remainder = divmod(battery, 3600)
     minutes, _ = divmod(remainder, 60)
+    if hours == 0:
+        return f"{minutes}m"
     return f"{hours}h {minutes}m"
 
 

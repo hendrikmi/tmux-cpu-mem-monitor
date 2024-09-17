@@ -106,72 +106,46 @@ def test_battery_functions_exceptions():
             assert str(e) == "Battery Error"
 
 
-def test_battery_human_readable_format():
-    """Test if the battery human-readable format is properly formatted."""
-    with mock.patch(
-        "src.battery.get_battery_long", return_value="Fully charged"
-    ):
-        human_readable = battery.get_battery_long()
-        assert (
-            human_readable == "Fully charged"
-        ), f"Expected 'Fully charged', got: {human_readable}"
-
-    with mock.patch(
-        "src.battery.get_battery_long", return_value="Almost full"
-    ):
-        human_readable = battery.get_battery_long()
-        assert (
-            human_readable == "Almost full"
-        ), f"Expected 'Almost full', got: {human_readable}"
-
-    with mock.patch(
-        "src.battery.get_battery_long", return_value="More than half full"
-    ):
-        human_readable = battery.get_battery_long()
-        assert (
-            human_readable == "More than half full"
-        ), f"Expected 'More than half full', got: {human_readable}"
-
-    with mock.patch("src.battery.get_battery_long", return_value="Half full"):
-        human_readable = battery.get_battery_long()
-        assert (
-            human_readable == "Half full"
-        ), f"Expected 'Half full', got: {human_readable}"
-
-    with mock.patch(
-        "src.battery.get_battery_long", return_value="Less than half full"
-    ):
-        human_readable = battery.get_battery_long()
-        assert (
-            human_readable == "Less than half full"
-        ), f"Expected 'Less than half full', got: {human_readable}"
-
-    with mock.patch(
-        "src.battery.get_battery_long", return_value="Battery is almost empty"
-    ):
-        human_readable = battery.get_battery_long()
-        assert (
-            human_readable == "Battery is almost empty"
-        ), f"Expected 'Battery is almost empty', got: {human_readable}"
-
-    with mock.patch(
-        "src.battery.get_battery_long", return_value="I'm dying over here!"
-    ):
-        human_readable = battery.get_battery_long()
-        assert (
-            human_readable == "I'm dying over here!"
-        ), f"Expected 'I'm dying over here!', got: {human_readable}"
-
-    with mock.patch(
-        "src.battery.get_battery_long", return_value="Battery is empty"
-    ):
-        human_readable = battery.get_battery_long()
-        assert (
-            human_readable == "Battery is empty"
-        ), f"Expected 'Battery is empty', got: {human_readable}"
-
+def test_battery_long_format():
+    """Test if the battery long format is properly formatted"""
     with mock.patch("src.battery.get_battery_long", return_value="Charging"):
-        human_readable = battery.get_battery_long()
+        long = battery.get_battery_long()
+        assert long == "Charging", f"Expected 'Charging', got: {long}"
+
+    with mock.patch("src.battery.get_battery_long", return_value="Out of battery"):
+        long = battery.get_battery_long()
+        assert long == "Out of battery", f"Expected 'Out of battery', got: {long}"
+
+    with mock.patch("src.battery.get_battery_long", return_value="1 minute remaining"):
+        long = battery.get_battery_long()
         assert (
-            human_readable == "Charging"
-        ), f"Expected 'Charging', got: {human_readable}"
+            long == "1 minute remaining"
+        ), f"Expected '1 minute remaining', got: {long}"
+
+    with mock.patch("src.battery.get_battery_long", return_value="1+ hour remaining"):
+        long = battery.get_battery_long()
+        assert long == "1+ hour remaining", f"Expected '1+ hour remaining', got: {long}"
+
+    with mock.patch(
+        "src.battery.get_battery_long", return_value="more than 1 hours remaining"
+    ):
+        long = battery.get_battery_long()
+        assert (
+            long == "more than 1 hours remaining"
+        ), f"Expected 'more than 1 hours remaining', got: {long}"
+
+    with mock.patch(
+        "src.battery.get_battery_long", return_value="more than 1 minutes remaining"
+    ):
+        long = battery.get_battery_long()
+        assert (
+            long == "more than 1 minutes remaining"
+        ), f"Expected 'more than 1 minutes remaining', got: {long}"
+
+    with mock.patch(
+        "src.battery.get_battery_long", return_value="30 minutes remaining"
+    ):
+        long = battery.get_battery_long()
+        assert (
+            long == "30 minutes remaining"
+        ), f"Expected '30 minutes remaining', got: {long}"

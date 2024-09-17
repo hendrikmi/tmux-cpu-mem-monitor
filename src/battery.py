@@ -69,7 +69,7 @@ def get_battery_long():
 def get_battery_compact():
     """Display battery percentage in a compact format"""
     if _get_charging_status():
-        return "Charging"
+        return chr(0x00002593)
 
     # Remap the battery percentage into a whole number from 0 up to 7
     def remap_range(value, low, high, remap_low, remap_high):

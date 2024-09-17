@@ -32,12 +32,15 @@ def get_battery_time():
 
 
 def get_battery_long():
-    """Display the remaining battery amount in a fun human-readable format.
+    """Display the remaining battery amount in a human-readable format.
 
     Examples:
-    - Fully charged
-    - Almost full
-    - More than half full
+    - Charging
+    - Out of battery
+    - 1 minute remaining
+    - 5 minutes remaining
+    - 1+ hour remaining
+    - more than 2 hours remaining
     ...
     """
     if _get_charging_status():

@@ -89,6 +89,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - name: Python Vulture Action
-        uses: anaynayak/python-vulture-action@v1.0
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m ensurepip --upgrade
+          pip install vulture
+          vulture src
 

@@ -66,11 +66,31 @@ def get_battery_long():
             return f"more than {hours} hours remaining"
 
 
+def get_battery_compact():
+    """Display battery percentage in a compact format"""
+    if _get_charging_status():
+        return "Charging"
+
+    # Remap the battery percentage into a whole number from 0 up to 7
+    def remap_range(value, low, high, remap_low, remap_high):
+        return remap_low + (value - low) * (remap_high - remap_low) / (high - low)
+
+    battery = remap_range(psutil.sensors_battery().percent, 0, 100, 0, 7)
+
+    # Unicode characters for the battery indicator
+    # 0x00002581-0x00002588
+    battery_indicator = chr(0x00002581 + int(battery))
+
+    return f"{battery_indicator}"
+
+
 def main(args):
     if args.time:
         battery = get_battery_time()
     elif args.long:
         battery = get_battery_long()
+    elif args.compact:
+        battery = get_battery_compact()
     else:
         battery = get_battery_percent()
 
@@ -83,5 +103,6 @@ if __name__ == "__main__":
     group.add_argument("-p", "--percent", action="store_true", default=False)
     group.add_argument("-t", "--time", action="store_true", default=False)
     group.add_argument("-l", "--long", action="store_true", default=False)
+    group.add_argument("-c", "--compact", action="store_true", default=False)
     args = parser.parse_args()
     main(args)

@@ -1,8 +1,7 @@
 from unittest.mock import patch
+import unittest
 
-import pytest
-
-from src.battery import get_battery_long
+from src.battery import get_battery_long, get_battery_compact
 
 
 # Test when the device is charging
@@ -55,3 +54,17 @@ def test_more_than_1_hour_remaining(mock_battery, mock_charging_status):
     mock_battery.return_value.secsleft = 2 * 3600
     result = get_battery_long()
     assert result == "more than 2 hours remaining"
+
+
+# Test battery compact mode with a range of percentages
+@patch("src.battery._get_charging_status", return_value=False)
+@patch("psutil.sensors_battery")
+def test_battery_compact(mock_battery, mock_charging_status):
+    print("Battery percentage:", end=" ")
+    for i in range(0, 101, 10):
+        mock_battery.return_value.percent = i
+        character = get_battery_compact()
+        print(i, character, end=" ")
+
+        result = ord(character)
+        assert 0x00002581 <= result <= 0x00002588

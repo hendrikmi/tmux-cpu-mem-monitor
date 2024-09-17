@@ -31,7 +31,7 @@ def get_battery_time():
     return f"{hours}h {minutes}m"
 
 
-def get_battery_human_readable():
+def get_battery_long():
     """Display the remaining battery amount in a fun human-readable format.
 
     Examples:
@@ -43,29 +43,31 @@ def get_battery_human_readable():
     if _get_charging_status():
         return "Charging"
 
-    battery = psutil.sensors_battery().percent
-    if battery == 100:
-        return "Fully charged"
-    elif battery >= 95:
-        return "Almost full"
-    elif battery >= 75:
-        return "More than half full"
-    elif battery == 50:
-        return "Half full"
-    elif battery <= 25:
-        return "Less than half full"
-    elif battery <= 5:
-        return "Battery is almost empty"
-    elif battery == 1:
-        return "I'm dying over here!"
-    return "Battery is empty"
+    battery = psutil.sensors_battery().secsleft
+    hours, remainder = divmod(battery, 3600)
+    minutes, _ = divmod(remainder, 60)
+
+    # Switch statements for hours and minutes to return human-readable output
+    match hours:
+        case 0:
+            match minutes:
+                case 0:
+                    return "Out of battery"
+                case 1:
+                    return "1 minute remaining"
+                case _:
+                    return f"{minutes} minutes remaining"
+        case 1:
+            return "1+ hour remaining"
+        case _:
+            return f"more than {hours} hours remaining"
 
 
 def main(args):
     if args.time:
         battery = get_battery_time()
-    elif args.human_readable:
-        battery = get_battery_human_readable()
+    elif args.long:
+        battery = get_battery_long()
     else:
         battery = get_battery_percent()
 
@@ -77,6 +79,6 @@ if __name__ == "__main__":
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-p", "--percent", action="store_true", default=False)
     group.add_argument("-t", "--time", action="store_true", default=False)
-    group.add_argument("-hr", "--human-readable", action="store_true", default=False)
+    group.add_argument("-l", "--long", action="store_true", default=False)
     args = parser.parse_args()
     main(args)

@@ -43,6 +43,7 @@ For more details, see the documentation of the underlying [psutil library](https
 ### `#{battery}` Placeholder
 - `-t, --time`: Display the remaining battery life time.
 - `-p, --percentage`: Display the remaining battery percentage.
+- `-l, --long`: Display the remaining battery as a sentence.
 
 ## Examples
 
@@ -50,21 +51,18 @@ For more details, see the documentation of the underlying [psutil library](https
 set -g status-right "#{cpu} | #{mem} | #{disk} | #{battery}"
 ```
 
-<!-- TODO: Add image with disk usage -->
 <img src="img/cpu_mem_disk.png" alt="" style="width:100%; height:100%;"/>
 
 ```bash
-set -g status-right " CPU: #{cpu} |  MEM: #{mem -t} | 󱛟 DISK: #{disk -t}"
+set -g status-right " CPU: #{cpu} |  MEM: #{mem -t} | 󱛟 DISK: #{disk -t} | 🗲 #{battery -t}"
 ```
 
-<!-- TODO: Add image with disk usage -->
 <img src="img/cpu_mem_t_disk_t.png" alt="" style="width:100%; height:100%;"/>
 
 ```bash
-set -g status-right " CPU: #{cpu -i 3} |  MEM: #{mem} | 󱛟 DISK: #{disk -f}"
+set -g status-right " CPU: #{cpu -i 3} |  MEM: #{mem} | 󱛟 DISK: #{disk -f} | 🗲 #{battery -l}"
 ```
 
-<!-- TODO: Add image with disk usage -->
 <img src="img/cpu_mem_disk_f.png" alt="" style="width:100%; height:100%;"/>
 
 ## Why Another Plugin?

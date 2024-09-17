@@ -1,151 +1,55 @@
-import re
-from unittest import mock
-
-from src import battery
-
-
-def test_battery_percentage_format():
-    """Assert that the battery percentage is properly formatted or it returns 'Charging'.
-
-    Example: 20% or 'Charging'
-    """
-    with mock.patch("src.battery.get_battery_percent", return_value="20%"):
-        percent = battery.get_battery_percent()
-        assert re.match(
-            r"\d+%$", percent
-        ), f"Unexpected battery percentage format: {percent}"
-
-    with mock.patch("src.battery.get_battery_percent", return_value="Charging"):
-        percent = battery.get_battery_percent()
-        assert percent == "Charging", f"Expected 'Charging', got: {percent}"
+import pytest
+from unittest.mock import patch
+from src.battery import get_battery_long
 
 
-def test_battery_time_format():
-    """Assert that the battery time is properly formatted or it returns 'Charging'.
-
-    Example: 1h 30m or 'Charging'
-    """
-    with mock.patch("src.battery.get_battery_time", return_value="1h 30m"):
-        time = battery.get_battery_time()
-        assert re.match(r"\d+h \d+m$", time), f"Unexpected battery time format: {time}"
-
-    with mock.patch("src.battery.get_battery_time", return_value="Charging"):
-        time = battery.get_battery_time()
-        assert time == "Charging", f"Expected 'Charging', got: {time}"
+# Test when the device is charging
+@patch("src.battery._get_charging_status", return_value=True)
+def test_charging(mock_charging_status):
+    result = get_battery_long()
+    assert result == "Charging"
 
 
-def test_battery_percentage_0_percent():
-    """Test if 0% is properly formatted"""
-    with mock.patch("src.battery.get_battery_percent", return_value="0%"):
-        percent = battery.get_battery_percent()
-        assert percent == "0%", f"Expected '0%', got: {percent}"
+# Test battery completely out (0 hours, 0 minutes)
+@patch("src.battery._get_charging_status", return_value=False)
+@patch("psutil.sensors_battery")
+def test_out_of_battery(mock_battery, mock_charging_status):
+    mock_battery.return_value.secsleft = 0
+    result = get_battery_long()
+    assert result == "Out of battery"
 
 
-def test_battery_percentage_100_percent():
-    """Test if 100% is properly formatted"""
-    with mock.patch("src.battery.get_battery_percent", return_value="100%"):
-        percent = battery.get_battery_percent()
-        assert percent == "100%", f"Expected '100%', got: {percent}"
+# Test battery with 1 minute remaining (0 hours, 1 minute)
+@patch("src.battery._get_charging_status", return_value=False)
+@patch("psutil.sensors_battery")
+def test_1_minute_remaining(mock_battery, mock_charging_status):
+    mock_battery.return_value.secsleft = 60
+    result = get_battery_long()
+    assert result == "1 minute remaining"
 
 
-def test_battery_percentage_invalid_format():
-    """Test handling of invalid percentage format"""
-    with mock.patch("src.battery.get_battery_percent", return_value="abc"):
-        percent = battery.get_battery_percent()
-        assert (
-            re.match(r"\d+%$", percent) is None
-        ), f"Expected invalid format, got: {percent}"
+# Test battery with 5 minutes remaining (0 hours, 5 minutes)
+@patch("src.battery._get_charging_status", return_value=False)
+@patch("psutil.sensors_battery")
+def test_5_minutes_remaining(mock_battery, mock_charging_status):
+    mock_battery.return_value.secsleft = 5 * 60
+    result = get_battery_long()
+    assert result == "5 minutes remaining"
 
 
-def test_battery_time_no_minutes():
-    """Test if time with no minutes is properly formatted (e.g., 2h 0m)"""
-    with mock.patch("src.battery.get_battery_time", return_value="2h 0m"):
-        time = battery.get_battery_time()
-        assert re.match(r"\d+h \d+m$", time), f"Expected '2h 0m', got: {time}"
+# Test battery with more than 1 hour (1+ hour remaining)
+@patch("src.battery._get_charging_status", return_value=False)
+@patch("psutil.sensors_battery")
+def test_1_hour_remaining(mock_battery, mock_charging_status):
+    mock_battery.return_value.secsleft = 3600
+    result = get_battery_long()
+    assert result == "1+ hour remaining"
 
 
-def test_battery_time_no_hours():
-    """Test if time with no hours is properly formatted (e.g., 0h 30m)"""
-    with mock.patch("src.battery.get_battery_time", return_value="0h 30m"):
-        time = battery.get_battery_time()
-        assert re.match(r"\d+h \d+m$", time), f"Expected '0h 30m', got: {time}"
-
-
-def test_battery_time_invalid_format():
-    """Test handling of invalid time format"""
-    with mock.patch("src.battery.get_battery_time", return_value="30m"):
-        time = battery.get_battery_time()
-        assert (
-            re.match(r"\d+h \d+m$", time) is None
-        ), f"Expected invalid format, got: {time}"
-
-
-def test_battery_time_extremely_large():
-    """Test handling of extremely large values"""
-    with mock.patch("src.battery.get_battery_time", return_value="999h 999m"):
-        time = battery.get_battery_time()
-        assert re.match(r"\d+h \d+m$", time), f"Expected '999h 999m', got: {time}"
-
-
-def test_battery_functions_exceptions():
-    """Test if exceptions are handled gracefully"""
-    with mock.patch(
-        "src.battery.get_battery_percent", side_effect=Exception("Battery Error")
-    ):
-        try:
-            battery.get_battery_percent()
-        except Exception as e:
-            assert str(e) == "Battery Error"
-
-    with mock.patch(
-        "src.battery.get_battery_time", side_effect=Exception("Battery Error")
-    ):
-        try:
-            battery.get_battery_time()
-        except Exception as e:
-            assert str(e) == "Battery Error"
-
-
-def test_battery_long_format():
-    """Test if the battery long format is properly formatted"""
-    with mock.patch("src.battery.get_battery_long", return_value="Charging"):
-        long = battery.get_battery_long()
-        assert long == "Charging", f"Expected 'Charging', got: {long}"
-
-    with mock.patch("src.battery.get_battery_long", return_value="Out of battery"):
-        long = battery.get_battery_long()
-        assert long == "Out of battery", f"Expected 'Out of battery', got: {long}"
-
-    with mock.patch("src.battery.get_battery_long", return_value="1 minute remaining"):
-        long = battery.get_battery_long()
-        assert (
-            long == "1 minute remaining"
-        ), f"Expected '1 minute remaining', got: {long}"
-
-    with mock.patch("src.battery.get_battery_long", return_value="1+ hour remaining"):
-        long = battery.get_battery_long()
-        assert long == "1+ hour remaining", f"Expected '1+ hour remaining', got: {long}"
-
-    with mock.patch(
-        "src.battery.get_battery_long", return_value="more than 1 hours remaining"
-    ):
-        long = battery.get_battery_long()
-        assert (
-            long == "more than 1 hours remaining"
-        ), f"Expected 'more than 1 hours remaining', got: {long}"
-
-    with mock.patch(
-        "src.battery.get_battery_long", return_value="more than 1 minutes remaining"
-    ):
-        long = battery.get_battery_long()
-        assert (
-            long == "more than 1 minutes remaining"
-        ), f"Expected 'more than 1 minutes remaining', got: {long}"
-
-    with mock.patch(
-        "src.battery.get_battery_long", return_value="30 minutes remaining"
-    ):
-        long = battery.get_battery_long()
-        assert (
-            long == "30 minutes remaining"
-        ), f"Expected '30 minutes remaining', got: {long}"
+# Test battery with more than 2 hours (e.g., 2 hours remaining)
+@patch("src.battery._get_charging_status", return_value=False)
+@patch("psutil.sensors_battery")
+def test_more_than_1_hour_remaining(mock_battery, mock_charging_status):
+    mock_battery.return_value.secsleft = 2 * 3600
+    result = get_battery_long()
+    assert result == "more than 2 hours remaining"

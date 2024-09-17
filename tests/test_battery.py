@@ -1,7 +1,7 @@
-from unittest.mock import patch
 import unittest
+from unittest.mock import patch
 
-from src.battery import get_battery_long, get_battery_compact
+from src.battery import get_battery_compact, get_battery_long
 
 
 # Test when the device is charging

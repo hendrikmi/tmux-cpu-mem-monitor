@@ -20,7 +20,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--interval", type=int, default=1)
-    parser.add_argument("--percpu", action="store_true", default=False)
+    parser.add_argument("-i", "--interval", type=int, default=1, help="interval in seconds")
+    parser.add_argument("--percpu", action="store_true", default=False, help="display per cpu usage")
     args = parser.parse_args()
     main(args)

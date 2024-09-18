@@ -44,6 +44,8 @@ For more details, see the documentation of the underlying [psutil library](https
 - `-t, --time`: Display the remaining battery life time.
 - `-p, --percentage`: Display the remaining battery percentage.
 - `-l, --long`: Display the remaining battery as a sentence.
+- `-c, --compact`: Display the remaining battery using and icon.
+- `-f, --fun`: Display the remaining battery in a fun way.
 
 ## Examples
 

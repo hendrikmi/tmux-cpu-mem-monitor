@@ -56,6 +56,60 @@ def test_more_than_1_hour_remaining(mock_battery, mock_charging_status):
     assert result == "more than 2 hours remaining"
 
 
+# Test the battery "fun" mode with less than 1 minute remaining
+@patch("src.battery._get_charging_status", return_value=False)
+@patch("psutil.sensors_battery")
+def test_battery_fun_less_than_1_minute(mock_battery, mock_charging_status):
+    mock_battery.return_value.secsleft = 30
+    result = get_battery_long(mode="humor")
+    assert result == "Needs juice"
+
+
+# Test the battery "fun" mode with more than 1 minute remaining
+@patch("src.battery._get_charging_status", return_value=False)
+@patch("psutil.sensors_battery")
+def test_battery_fun_less_than_2_minutes(mock_battery, mock_charging_status):
+    mock_battery.return_value.secsleft = 90
+    result = get_battery_long(mode="humor")
+    assert result == "It's getting dark"
+
+
+# Test the battery "fun" mode with 5 minutes remaining
+@patch("src.battery._get_charging_status", return_value=False)
+@patch("psutil.sensors_battery")
+def test_battery_fun_5_minutes(mock_battery, mock_charging_status):
+    mock_battery.return_value.secsleft = 5 * 60
+    result = get_battery_long(mode="humor")
+    assert result == "5m left, hurry!"
+
+
+# Test the battery "fun" mode with 10 minutes remaining
+@patch("src.battery._get_charging_status", return_value=False)
+@patch("psutil.sensors_battery")
+def test_battery_fun_10_minutes(mock_battery, mock_charging_status):
+    mock_battery.return_value.secsleft = 10 * 60
+    result = get_battery_long(mode="humor")
+    assert result == "My final hour"
+
+
+# Test the battery "fun" mode with 1 hour remaining
+@patch("src.battery._get_charging_status", return_value=False)
+@patch("psutil.sensors_battery")
+def test_battery_fun_1_hour(mock_battery, mock_charging_status):
+    mock_battery.return_value.secsleft = 3600
+    result = get_battery_long(mode="humor")
+    assert result == "The sun is setting"
+
+
+# Test the battery "fun" mode with 2 hours remaining
+@patch("src.battery._get_charging_status", return_value=False)
+@patch("psutil.sensors_battery")
+def test_battery_fun_2_hour(mock_battery, mock_charging_status):
+    mock_battery.return_value.secsleft = 3600 * 2
+    result = get_battery_long(mode="humor")
+    assert result == "Off the grid"
+
+
 # Test battery compact mode with a range of percentages
 @patch("src.battery._get_charging_status", return_value=False)
 @patch("psutil.sensors_battery")

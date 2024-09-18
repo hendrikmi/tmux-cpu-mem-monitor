@@ -31,7 +31,7 @@ def get_battery_time():
     return f"{hours}h {minutes}m"
 
 
-def get_battery_long():
+def get_battery_long(mode: str = None):
     """Display the remaining battery amount in a human-readable format.
 
     Examples:
@@ -44,6 +44,8 @@ def get_battery_long():
     ...
     """
     if _get_charging_status():
+        if mode == "fun":
+            return "Unlimited power!"
         return "Charging"
 
     battery = psutil.sensors_battery().secsleft
@@ -51,19 +53,37 @@ def get_battery_long():
     minutes, _ = divmod(remainder, 60)
 
     # Switch statements for hours and minutes to return human-readable output
-    match hours:
-        case 0:
-            match minutes:
+    match mode:
+        case "humor":
+            match hours:
                 case 0:
-                    return "Out of battery"
+                    match minutes:
+                        case 0:
+                            return "Needs juice"
+                        case 1:
+                            return "It's getting dark"
+                        case 5:
+                            return f"{minutes}m left, hurry!"
+                        case _:
+                            return "My final hour"
                 case 1:
-                    return "1 minute remaining"
+                    return "The sun is setting"
                 case _:
-                    return f"{minutes} minutes remaining"
-        case 1:
-            return "1+ hour remaining"
+                    return "Off the grid"
         case _:
-            return f"more than {hours} hours remaining"
+            match hours:
+                case 0:
+                    match minutes:
+                        case 0:
+                            return "Out of battery"
+                        case 1:
+                            return "1 minute remaining"
+                        case _:
+                            return f"{minutes} minutes remaining"
+                case 1:
+                    return "1+ hour remaining"
+                case _:
+                    return f"more than {hours} hours remaining"
 
 
 def get_battery_compact():
@@ -89,6 +109,8 @@ def main(args):
         battery = get_battery_time()
     elif args.long:
         battery = get_battery_long()
+    elif args.fun:
+        battery = get_battery_long(mode="humor")
     elif args.compact:
         battery = get_battery_compact()
     else:
@@ -103,6 +125,7 @@ if __name__ == "__main__":
     group.add_argument("-p", "--percent", action="store_true", default=False)
     group.add_argument("-t", "--time", action="store_true", default=False)
     group.add_argument("-l", "--long", action="store_true", default=False)
+    group.add_argument("-f", "--fun", action="store_true", default=False)
     group.add_argument("-c", "--compact", action="store_true", default=False)
     args = parser.parse_args()
     main(args)

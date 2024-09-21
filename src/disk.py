@@ -63,8 +63,22 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("-t", "--total", action="store_true", default=False)
-    group.add_argument("-f", "--free", action="store_true", default=False)
-    parser.add_argument("-p", "--path", type=str, default=None)
+    group.add_argument(
+        "-t",
+        "--total",
+        action="store_true",
+        default=False,
+        help="display disk usage as used/total in GB",
+    )
+    group.add_argument(
+        "-f",
+        "--free",
+        action="store_true",
+        default=False,
+        help="display free disk in GB",
+    )
+    parser.add_argument(
+        "-p", "--path", type=str, default=None, help="path to check disk usage"
+    )
     args = parser.parse_args()
     main(args)

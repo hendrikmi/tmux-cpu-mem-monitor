@@ -86,16 +86,17 @@ def get_battery_long(mode: str = None):
                     return f"more than {hours} hours remaining"
 
 
+def _remap_range(value, low, high, remap_low, remap_high):
+    """Remap the battery percentage into a whole number from 0 up to 7"""
+    return remap_low + (value - low) * (remap_high - remap_low) // (high - low)
+
+
 def get_battery_compact():
     """Display battery percentage in a compact format"""
     if _get_charging_status():
         return chr(0x00002593)
 
-    # Remap the battery percentage into a whole number from 0 up to 7
-    def remap_range(value, low, high, remap_low, remap_high):
-        return remap_low + (value - low) * (remap_high - remap_low) / (high - low)
-
-    battery = remap_range(psutil.sensors_battery().percent, 0, 100, 0, 7)
+    battery = _remap_range(psutil.sensors_battery().percent, 0, 100, 0, 7)
 
     # Unicode characters for the battery indicator
     # 0x00002581-0x00002588
@@ -121,21 +122,23 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument(
+    type_option = parser.add_mutually_exclusive_group()
+    type_option.add_argument(
         "-p",
         "--percent",
         action="store_true",
         default=False,
         help="display remaining battery percentage",
     )
-    group.add_argument(
+    type_option.add_argument(
         "-t",
         "--time",
         action="store_true",
         default=False,
         help="display remaining battery time",
     )
+
+    group = parser.add_mutually_exclusive_group()
     group.add_argument(
         "-l",
         "--long",
@@ -150,7 +153,8 @@ if __name__ == "__main__":
         default=False,
         help="display remaining battery with humor",
     )
-    group.add_argument(
+
+    parser.add_argument(
         "-c",
         "--compact",
         action="store_true",

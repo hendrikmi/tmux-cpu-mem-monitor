@@ -52,38 +52,31 @@ def get_battery_long(mode: str = None):
     hours, remainder = divmod(battery, 3600)
     minutes, _ = divmod(remainder, 60)
 
-    # Switch statements for hours and minutes to return human-readable output
-    match mode:
-        case "humor":
-            match hours:
-                case 0:
-                    match minutes:
-                        case 0:
-                            return "Needs juice"
-                        case 1:
-                            return "It's getting dark"
-                        case 5:
-                            return f"{minutes}m left, hurry!"
-                        case _:
-                            return "My final hour"
-                case 1:
-                    return "The sun is setting"
-                case _:
-                    return "Off the grid"
-        case _:
-            match hours:
-                case 0:
-                    match minutes:
-                        case 0:
-                            return "Out of battery"
-                        case 1:
-                            return "1 minute remaining"
-                        case _:
-                            return f"{minutes} minutes remaining"
-                case 1:
-                    return "1+ hour remaining"
-                case _:
-                    return f"more than {hours} hours remaining"
+    def default_output():
+        if hours == 0:
+            if minutes == 0:
+                return "Out of battery"
+            elif minutes == 1:
+                return "1 minute remaining"
+            return f"{minutes} minutes remaining"
+        elif hours == 1:
+            return "1+ hour remaining"
+        return f"more than {hours} hours remaining"
+
+    def humor_output():
+        if hours == 0:
+            if minutes == 0:
+                return "Needs juice"
+            elif minutes == 1:
+                return "It's getting dark"
+            elif minutes == 5:
+                return f"{minutes}m left, hurry!"
+            return "My final hour"
+        elif hours == 1:
+            return "The sun is setting"
+        return "Off the grid"
+
+    return humor_output() if mode == "humor" else default_output()
 
 
 def _remap_range(value, low, high, remap_low, remap_high):

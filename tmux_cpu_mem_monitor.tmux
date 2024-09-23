@@ -56,8 +56,10 @@ main() {
     update_placeholder "cpu" "status-right" "cpu.py"
     update_placeholder "mem" "status-right" "mem.py"
     update_placeholder "disk" "status-right" "disk.py"
+    update_placeholder "battery" "status-right" "battery.py"
     update_placeholder "cpu" "status-left" "cpu.py"
     update_placeholder "mem" "status-left" "mem.py"
     update_placeholder "disk" "status-left" "disk.py"
+    update_placeholder "battery" "status-left" "battery.py"
 }
 main

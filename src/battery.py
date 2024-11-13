@@ -1,7 +1,7 @@
 import argparse
+from datetime import timedelta
 
 import psutil
-from datetime import timedelta
 
 
 def _get_charging_status():

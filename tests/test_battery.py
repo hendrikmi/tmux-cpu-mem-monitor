@@ -1,4 +1,5 @@
 from unittest.mock import patch
+
 import pytest
 
 from src.battery import get_battery_compact, get_battery_long

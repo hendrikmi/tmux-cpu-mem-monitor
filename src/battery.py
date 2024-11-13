@@ -1,6 +1,7 @@
 import argparse
 
 import psutil
+from datetime import timedelta
 
 
 def _get_charging_status():
@@ -23,60 +24,40 @@ def get_battery_time():
     if _get_charging_status():
         return "Charging"
 
-    battery = psutil.sensors_battery().secsleft
-    hours, remainder = divmod(battery, 3600)
-    minutes, _ = divmod(remainder, 60)
-    if hours == 0:
-        return f"{minutes}m"
-    return f"{hours}h {minutes}m"
+    time_left = timedelta(seconds=psutil.sensors_battery().secsleft)
+    print(time_left)
+    return str(time_left).split(".")[0]
 
 
-def get_battery_long(mode: str = None):
+def get_battery_long():
     """Display the remaining battery amount in a human-readable format.
 
     Examples:
     - Charging
     - Out of battery
-    - 1 minute remaining
-    - 5 minutes remaining
-    - 1+ hour remaining
-    - more than 2 hours remaining
+    - Battery is almost empty
+    - Battery is running low
+    - More than half full
     ...
     """
     if _get_charging_status():
-        if mode == "fun":
-            return "Unlimited power!"
         return "Charging"
 
-    battery = psutil.sensors_battery().secsleft
-    hours, remainder = divmod(battery, 3600)
-    minutes, _ = divmod(remainder, 60)
+    battery_status = {
+        (100, 100): "Fully charged",
+        (95, 99): "Almost full",
+        (74, 94): "More than 3/4 full",
+        (50, 74): "More than half full",
+        (26, 49): "Less than half full",
+        (6, 25): "Battery is running low",
+        (2, 5): "Battery is almost empty",
+        (1, 1): "I'm dying over here",
+        (0, 0): "Out of battery",
+    }
 
-    def default_output():
-        if hours == 0:
-            if minutes == 0:
-                return "Out of battery"
-            elif minutes == 1:
-                return "1 minute remaining"
-            return f"{minutes} minutes remaining"
-        elif hours == 1:
-            return "1+ hour remaining"
-        return f"more than {hours} hours remaining"
-
-    def humor_output():
-        if hours == 0:
-            if minutes == 0:
-                return "Needs juice"
-            elif minutes == 1:
-                return "It's getting dark"
-            elif minutes == 5:
-                return f"{minutes}m left, hurry!"
-            return "My final hour"
-        elif hours == 1:
-            return "The sun is setting"
-        return "Off the grid"
-
-    return humor_output() if mode == "humor" else default_output()
+    for (low, high), status in battery_status.items():
+        if low <= psutil.sensors_battery().percent <= high:
+            return status
 
 
 def _remap_range(value, low, high, remap_low, remap_high):
@@ -99,7 +80,9 @@ def get_battery_compact():
 
 
 def main(args):
-    if args.time:
+    if args.percent:
+        battery = get_battery_percent()
+    elif args.time:
         battery = get_battery_time()
     elif args.long:
         battery = get_battery_long()

@@ -30,17 +30,31 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies 
-        shell: bash
+        if: runner.os != 'Windows'
         run: |
           python -m venv .venv
           source .venv/bin/activate
           python -m ensurepip --upgrade
           pip install -r requirements-dev.txt
 
+      - name: Install dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          python -m venv .venv
+          .\.venv\Scripts\Activate.ps1
+          python -m ensurepip --upgrade
+          pip install -r requirements-dev.txt
+
       - name: Run tests
-        shell: bash
+        if: runner.os != 'Windows'
         run: |
           source .venv/bin/activate
+          pytest -v
+
+      - name: Run tests (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          .\.venv\Scripts\Activate.ps1
           pytest -v
 
   format:

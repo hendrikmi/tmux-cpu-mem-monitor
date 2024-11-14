@@ -33,22 +33,14 @@ jobs:
         shell: bash
         run: |
           python -m venv .venv
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            .\.venv\Scripts\Activate.ps1
-          else
-            source .venv/bin/activate
-          fi
+          source .venv/bin/activate
           python -m ensurepip --upgrade
           pip install -r requirements-dev.txt
 
       - name: Run tests
         shell: bash
         run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            .\.venv\Scripts\Activate.ps1
-          else
-            source .venv/bin/activate
-          fi
+          source .venv/bin/activate
           pytest -v
 
   format:

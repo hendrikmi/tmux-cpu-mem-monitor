@@ -30,6 +30,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies 
+        shell: bash
         run: |
           python -m venv .venv
           if [ "$RUNNER_OS" == "Windows" ]; then
@@ -41,6 +42,7 @@ jobs:
           pip install -r requirements-dev.txt
 
       - name: Run tests
+        shell: bash
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
             .\.venv\Scripts\Activate.ps1

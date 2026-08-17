@@ -14,20 +14,27 @@ check_python_installation() {
 setup_virtual_env() {
     if [ ! -d "$CURRENT_DIR/venv" ]; then
         tmux display-message "tmux-cpu-memory: Setting up virtual environment..."
-        if python3 -m venv "$CURRENT_DIR/venv"; then
-            if "$CURRENT_DIR/venv/bin/pip" install -r "$CURRENT_DIR/requirements.txt"; then
-                tmux display-message "tmux-cpu-memory plugin installed successfully."
-            else
-                tmux display-message "tmux-cpu-memory: Failed to install dependencies."
-                exit 1 # Exit if pip fails to install dependencies
-            fi
-        else
-            tmux display-message "tmux-cpu-memory: Failed to create virtual environment."
+        if ! python3 -m venv "$CURRENT_DIR/venv"; then
+            tmux display-message "tmux-cpu-memory: Failed to create virtual environment. Ensure python3-venv is installed."
             exit 1 # Exit if virtual environment creation fails
         fi
-    else
-        tmux display-message "tmux-cpu-memory: Virtual environment already exists."
     fi
+
+    # Bootstrap pip if needed
+    if ! "$CURRENT_DIR/venv/bin/python3" -m pip --version >/dev/null 2>&1; then
+        tmux display-message "tmux-cpu-memory: Bootstrapping pip via ensurepip..."
+        if ! "$CURRENT_DIR/venv/bin/python3" -m ensurepip --upgrade 2>/dev/null; then
+            tmux display-message "tmux-cpu-memory: Failed to bootstrap pip. Ensure pip is installed."
+            exit 1
+        fi
+    fi
+
+    if ! "$CURRENT_DIR/venv/bin/python3" -m pip install -r "$CURRENT_DIR/requirements.txt"; then
+        tmux display-message "tmux-cpu-memory: Failed to install dependencies. See the error above and check your network connection."
+        exit 1 # Exit if pip fails to install dependencies
+    fi
+
+    tmux display-message "tmux-cpu-memory plugin installed successfully."
 }
 
 # Updates tmux option with the cpu or mem script command
